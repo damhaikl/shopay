@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+<div class="container" style="max-width:520px">
+  <h1 class="page-title">My Profile</h1>
+  <div class="card">
+    <% if (errors.length > 0) { %><div class="alert alert-error"><% errors.forEach(e => { %><p>⚠ <%= e.msg %></p><% }) %></div><% } %>
+    <% if (success) { %><div class="alert alert-success">✓ <%= success %></div><% } %>
+    <form action="/profile" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" name="username" value="<%= user.username %>" required></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" name="email" value="<%= user.email %>" required></div>
+      <div class="form-group"><label class="form-label">Role</label><input class="form-input" value="<%= user.role %>" disabled style="background:var(--bg);color:var(--gray)"></div>
+      <hr class="divider">
+      <p style="font-size:0.85rem;font-weight:600;color:var(--gray);margin-bottom:1rem">Change Password (optional)</p>
+      <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" name="current_password"></div>
+      <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" name="new_password" minlength="8"><p class="form-hint">Min 8 chars · uppercase · number · special character</p></div>
+      <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+  </div>
+</div>
+<%- include('partials/footer') %>

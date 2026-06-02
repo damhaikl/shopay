@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+<div class="container">
+  <div class="page-header">
+    <div>
+      <p style="font-size:0.85rem;color:var(--gray);margin-bottom:0.2rem">Welcome back,</p>
+      <h1 class="page-title" style="margin-bottom:0"><%= user.username %></h1>
+    </div>
+    <a href="/products" class="btn btn-accent">Browse Shop →</a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num"><%= products.length %></div>
+      <div class="stat-label">Total Products</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><%= products.filter(p => p.stock > 0).length %></div>
+      <div class="stat-label">In Stock</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><%= products.filter(p => p.stock === 0).length %></div>
+      <div class="stat-label">Out of Stock</div>
+    </div>
+    <% if (user.role === 'admin') { %>
+    <div class="stat-card">
+      <div class="stat-num"><%= totalUsers %></div>
+      <div class="stat-label">Registered Users</div>
+    </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+      <h2 style="font-size:1rem;font-weight:600">Latest Products</h2>
+      <% if (user.role === 'admin') { %><a href="/products/create" class="btn btn-sm btn-primary">+ Add Product</a><% } %>
+    </div>
+    <% if (products.length === 0) { %>
+      <p style="color:var(--gray);text-align:center;padding:2rem">No products yet.<% if (user.role === 'admin') { %> <a href="/products/create">Add one →</a><% } %></p>
+    <% } else { %>
+    <table>
+      <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead>
+      <tbody>
+        <% products.slice(0,5).forEach(p => { %>
+        <tr>
+          <td><strong><a href="/products/view/<%= p.id %>" style="color:var(--black)"><%= p.name %></a></strong></td>
+          <td style="color:var(--gray)"><%= p.category %></td>
+          <td><strong>RM <%= parseFloat(p.price).toFixed(2) %></strong></td>
+          <td>
+            <% if (p.stock === 0) { %><span class="badge badge-out">Out of Stock</span>
+            <% } else if (p.stock < 5) { %><span class="badge badge-low"><%= p.stock %> left</span>
+            <% } else { %><span class="badge badge-in-stock"><%= p.stock %> in stock</span><% } %>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+</div>
+<%- include('partials/footer') %>

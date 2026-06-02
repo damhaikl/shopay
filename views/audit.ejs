@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<%- include('partials/nav') %>
+<div class="container">
+  <h1 class="page-title">Audit Logs</h1>
+  <p style="color:var(--gray);font-size:0.88rem;margin-bottom:1.2rem">Security events and admin actions. Visible to admins only.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>Time</th><th>User</th><th>Action</th><th>IP</th></tr></thead>
+      <tbody>
+        <% if (logs.length === 0) { %>
+        <tr><td colspan="4" style="text-align:center;color:var(--gray);padding:2rem">No logs yet.</td></tr>
+        <% } %>
+        <% logs.forEach(log => { %>
+        <tr>
+          <td style="font-size:0.8rem;color:var(--gray);white-space:nowrap"><%= new Date(log.timestamp).toLocaleString() %></td>
+          <td><strong><%= log.username %></strong></td>
+          <td>
+            <% if (log.action.includes('FAILED')) { %><span style="color:var(--danger)">⚠ <%= log.action %></span>
+            <% } else if (log.action.includes('SUCCESS')) { %><span style="color:var(--success)">✓ <%= log.action %></span>
+            <% } else { %><span style="color:var(--gray)"><%= log.action %></span><% } %>
+          </td>
+          <td style="font-size:0.82rem;color:var(--gray);font-family:'DM Mono',monospace"><%= log.ip %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('partials/footer') %>

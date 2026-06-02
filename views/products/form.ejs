@@ -1,0 +1,77 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav') %>
+<div class="container" style="max-width:560px">
+  <h1 class="page-title"><%= product && product.id ? 'Edit Product' : 'Add Product' %></h1>
+  <div class="card">
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-error"><% errors.forEach(e => { %><p>⚠ <%= e.msg %></p><% }) %></div>
+    <% } %>
+    <form action="<%= product && product.id ? '/products/edit/' + product.id + '?_csrf=' + csrfToken : '/products/create?_csrf=' + csrfToken %>" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label class="form-label">Product Name</label>
+        <input class="form-input" type="text" name="name" value="<%= product ? product.name : '' %>" required maxlength="100">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input class="form-input" type="text" name="category" value="<%= product ? product.category : '' %>" required placeholder="e.g. Electronics, Clothing">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">Price (RM)</label>
+          <input class="form-input" type="number" name="price" value="<%= product ? product.price : '' %>" required min="0.01" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Stock (units)</label>
+          <input class="form-input" type="number" name="stock" value="<%= product ? product.stock : '' %>" required min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" name="description" maxlength="1000"><%= product ? product.description : '' %></textarea>
+      </div>
+
+      <!-- ── IMAGE UPLOAD ── -->
+      <div class="form-group">
+        <label class="form-label">Product Image <span style="font-weight:400;color:var(--text-muted,#888)">(JPG, PNG, WEBP · max 2MB)</span></label>
+        <% if (product && product.image) { %>
+          <div style="margin-bottom:0.6rem">
+            <img src="/products/image/<%= product.image %>" alt="Current product image"
+              style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--border-color,#ddd)">
+            <p style="font-size:0.8rem;color:var(--text-muted,#888);margin-top:0.3rem">Current image — upload a new one to replace it.</p>
+          </div>
+        <% } %>
+        <input class="form-input" type="file" name="image" accept="image/jpeg,image/png,image/webp"
+          style="padding:0.4rem"
+          onchange="previewImage(this)">
+        <div id="img-preview" style="margin-top:0.6rem;display:none">
+          <img id="img-preview-src" src="" alt="Preview"
+            style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--border-color,#ddd)">
+          <p style="font-size:0.8rem;color:var(--text-muted,#888);margin-top:0.3rem">New image preview</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.7rem;margin-top:0.5rem">
+        <button type="submit" class="btn btn-primary"><%= product && product.id ? 'Save Changes' : 'Add Product' %></button>
+        <a href="/products/manage" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+function previewImage(input) {
+  const preview = document.getElementById('img-preview');
+  const previewSrc = document.getElementById('img-preview-src');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      previewSrc.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    preview.style.display = 'none';
+  }
+}
+</script>
+<%- include('../partials/footer') %>

@@ -1,0 +1,16 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav') %>
+<div class="container" style="max-width:500px;text-align:center;padding-top:3rem">
+  <div class="card">
+    <div style="font-size:4rem;margin-bottom:1rem">✅</div>
+    <h1 style="font-size:1.6rem;font-weight:700;margin-bottom:0.5rem">Order Placed!</h1>
+    <p style="color:var(--gray);margin-bottom:1.5rem">Thank you, <strong><%= full_name %></strong>! Your order for <strong><%= product.name %></strong> has been confirmed.</p>
+    <div style="background:var(--light,#f5f5f5);border-radius:8px;padding:1rem;text-align:left;margin-bottom:1.5rem">
+      <p style="margin:0.3rem 0"><strong>Product:</strong> <%= product.name %></p>
+      <p style="margin:0.3rem 0"><strong>Amount Paid:</strong> RM <%= parseFloat(product.price).toFixed(2) %></p>
+      <p style="margin:0.3rem 0"><strong>Deliver To:</strong> <%= address %></p>
+    </div>
+    <a href="/products" class="btn btn-primary">Continue Shopping</a>
+  </div>
+</div>
+<%- include('../partials/footer') %>

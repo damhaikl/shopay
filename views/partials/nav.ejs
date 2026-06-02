@@ -1,0 +1,26 @@
+<nav>
+  <a href="/dashboard" class="nav-brand">Shop<span>ay</span></a>
+  <div class="nav-links">
+    <% if (user && user.userId) { %>
+      <a href="/dashboard">Home</a>
+      <a href="/products">Shop</a>
+      <% if (user.role === 'admin') { %>
+        <a href="/products/manage">Manage</a>
+        <a href="/audit-logs">Logs</a>
+      <% } %>
+      <a href="/profile">Profile</a>
+    <% } else { %>
+      <a href="/auth/login">Login</a>
+      <a href="/auth/register">Register</a>
+    <% } %>
+  </div>
+  <% if (user && user.userId) { %>
+  <div style="display:flex;align-items:center;gap:0.8rem">
+    <span class="nav-user"><%= user.username %><% if (user.role === 'admin') { %><span class="badge-admin">Admin</span><% } %></span>
+    <form action="/auth/logout" method="POST" style="display:inline">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn-logout">Logout</button>
+    </form>
+  </div>
+  <% } %>
+</nav>

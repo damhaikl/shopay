@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav') %>
+<div class="container" style="max-width:560px">
+  <a href="/products/view/<%= product.id %>" class="btn btn-ghost btn-sm" style="margin-bottom:1.2rem">← Back</a>
+  <h1 class="page-title">Checkout</h1>
+
+  <!-- Order Summary -->
+  <div class="card" style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center">
+    <% if (product.image) { %>
+      <img src="/products/image/<%= product.image %>" style="width:70px;height:70px;object-fit:contain;border-radius:8px;background:#f5f5f5">
+    <% } else { %>
+      <div style="width:70px;height:70px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:2rem">🛍️</div>
+    <% } %>
+    <div>
+      <div style="font-weight:600;font-size:1rem"><%= product.name %></div>
+      <div style="color:var(--accent);font-weight:700;font-size:1.1rem">RM <%= parseFloat(product.price).toFixed(2) %></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-error"><% errors.forEach(e => { %><p>⚠ <%= e.msg %></p><% }) %></div>
+    <% } %>
+    <form action="/products/buy/<%= product.id %>?_csrf=<%= csrfToken %>" method="POST">
+
+      <p style="font-weight:600;margin-bottom:1rem;font-size:0.95rem;color:var(--gray)">DELIVERY DETAILS</p>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" name="full_name" required placeholder="e.g. Ahmad bin Ali">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input class="form-input" type="text" name="phone" required placeholder="e.g. 0123456789">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Delivery Address</label>
+        <textarea class="form-input" name="address" required rows="3" placeholder="Full address including postcode and state"></textarea>
+      </div>
+
+      <p style="font-weight:600;margin:1.2rem 0 1rem;font-size:0.95rem;color:var(--gray)">PAYMENT DETAILS</p>
+      <div class="form-group">
+        <label class="form-label">Cardholder Name</label>
+        <input class="form-input" type="text" name="card_name" required placeholder="Name on card">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Number</label>
+        <input class="form-input" type="text" name="card_number" required placeholder="16-digit card number" maxlength="16" pattern="\d{16}">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">Expiry Date</label>
+          <input class="form-input" type="text" name="expiry" required placeholder="MM/YY" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CVV</label>
+          <input class="form-input" type="text" name="cvv" required placeholder="3 or 4 digits" maxlength="4">
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--light);padding-top:1rem;margin-top:0.5rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:1.2rem;font-weight:700">Total: RM <%= parseFloat(product.price).toFixed(2) %></div>
+        <button type="submit" class="btn btn-primary" style="padding:0.7rem 2rem">Confirm Payment</button>
+      </div>
+    </form>
+  </div>
+</div>
+<%- include('../partials/footer') %>
